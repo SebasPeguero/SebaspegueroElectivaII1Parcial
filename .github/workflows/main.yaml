@@ -1,0 +1,24 @@
+name: Obtener Token Surge
+on:
+  push:
+    branches:
+      - main
+jobs:
+  get_token:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Instalar Surge y generar token
+        run: |
+          npm install surge-sdk
+          node -e "
+            const surgeSDK = require('surge-sdk');
+            const sdk = surgeSDK({ endpoint: 'https://surge.surge.sh' });
+            sdk.token({ user: '20251172@itla.edu.do', pass: 'SebasPeguero2025!' }, (err, res) => {
+              if (err) {
+                console.error('Error generating surge token:', err);
+                process.exit(1);
+              }
+              const b64 = Buffer.from(res.pass).toString('base64');
+              console.log('SURGE_TOKEN_BASE64_OUTPUT:' + b64);
+            });
+          "
